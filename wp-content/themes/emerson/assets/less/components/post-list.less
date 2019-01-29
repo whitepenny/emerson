@@ -1,0 +1,280 @@
+.post_dropdown {
+  margin: 0 0 20px;
+
+  @media @min_lg {
+    margin: 0 0 30px;
+  }
+}
+
+.post_list {
+  padding: 10px 0;
+
+  @media @min_lg {
+    padding: 20px 0;
+  }
+
+  @media @min_xl {
+    padding: 30px 0;
+  }
+}
+
+.post_item {
+  .transition_delay_loop(20);
+
+  // background: @white;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  @media @min_lg {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+}
+
+.post_item_image {
+  .block;
+
+  margin: 0 0 20px;
+}
+
+.post_item_container {
+  .contain;
+}
+
+.post_item_title {
+  .gtsectra;
+  .transition_link;
+
+  color: @black;
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 20px 0 5px;
+
+  @media @min_lg {
+    font-size: 36px;
+  }
+
+  a:hover & {
+    color: @red_mid;
+  }
+}
+
+.post_item {
+
+  .post_meta {
+    .opensans_bold;
+    .block;
+
+    border-bottom: 2px solid @red_mid;
+    color: @red_mid;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 0 10px;
+
+    @media @min_md {
+      border-bottom-width: 3px;
+      font-size: 14px;
+    }
+
+    &:last-child {
+      border: none;
+    }
+
+    a {
+      color: @red_mid;
+
+      &:hover {
+        color: @blue_mid;
+      }
+    }
+  }
+
+  .post_date {
+    color: @red_mid;
+
+    font-size: 14px;
+
+    @media @min_md {
+      font-size: 16px;
+    }
+  }
+}
+
+.post_item_content {
+  .opensans;
+
+  color: @gray_80;
+  font-size: 14px;
+  margin: 20px 0;
+
+  @media @min_md {
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0 0 5px;
+  }
+}
+
+// .post_item_link {
+//   .opensans_bold;
+//   .inline_block;
+//
+//   color: @blue_dark;
+//   font-size: 12px;
+//   letter-spacing: 0.05em;
+//   margin: 15px 0 0;
+//   text-transform: uppercase;
+//
+//   @media @min_md {
+//     font-size: 14px;
+//   }
+//
+//   &:after {
+//     &:extend(.icon:before all);
+//     &:extend(.icon.arrow_right_blue:before all);
+//
+//     .inline_block;
+//
+//     content: '';
+//     font-size: 10px;
+//     margin: -3px 0 0 10px;
+//     transition: transform 0.15s ease;
+//     transform: translateX(0);
+//   }
+//
+//   &:hover {
+//     color: @blue_light;
+//
+//     &:after {
+//       transform: translateX(5px);
+//     }
+//   }
+// }
+
+// Pagination
+
+.pagination {
+  margin: 20px 0 0;
+
+  @media @max_md {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  @media @min_md {
+    margin: 30px 0 0;
+  }
+
+  @media @min_lg {
+    margin: 40px 0 0;
+  }
+
+  @media @min_xl {
+    margin: 50px 0 0;
+  }
+
+  .page-numbers {
+    .opensans_semibold;
+    .inline_block;
+
+    color: @blue_mid;
+    font-size: 14px;
+    line-height: 35px;
+    margin: 0;
+    padding: 0 10px;
+
+    // @media @max_md {
+    //   // display: none;
+    //
+    //   &.prev,
+    //   &.next {
+    //     .inline_block;
+    //   }
+    // }
+
+    @media @min_lg {
+      font-size: 16px;
+    }
+
+    &.prev,
+    &.next {
+      .contain;
+      .relative;
+      .inline_block;
+
+      height: 35px;
+      width: 35px;
+
+      border: 2px solid @blue_mid;
+      border-radius: 100%;
+      text-align: center;
+      text-indent: 200%;
+      vertical-align: middle;
+      white-space: nowrap;
+
+      &:after {
+        .absolute;
+
+        height: 1px;
+        width: 1px;
+
+        top: 0;
+        bottom: 0;
+
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        content: '';
+        margin: auto;
+        transition: border 0.15s linear;
+      }
+
+      &:hover {
+        border-color: @red_mid;
+      }
+
+      // @media @max_md {
+      //   width: 40%;
+      // }
+    }
+
+    &.prev {
+      margin-right: 10px;
+
+      &:after {
+        left: 11px;
+
+        border-right: 7px solid @blue_mid;
+      }
+
+      &:hover:after {
+        border-right-color: @red_mid;
+      }
+    }
+
+    &.next {
+      margin-left: 10px;
+
+      &:after {
+        right: 11px;
+
+        border-left: 7px solid @blue_mid;
+      }
+
+      &:hover:after {
+        border-left-color: @red_mid;
+      }
+    }
+
+    &.current {
+      color: @red_mid;
+    }
+  }
+
+  a.page-numbers {
+
+    &:hover {
+      color: @red_mid;
+    }
+  }
+}

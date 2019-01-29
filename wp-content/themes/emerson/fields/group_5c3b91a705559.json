@@ -1,0 +1,39 @@
+{
+    "key": "group_5c3b91a705559",
+    "title": "Sidebar Content",
+    "fields": [
+        {
+            "key": "field_5c3b91ab3562d",
+            "label": "Button",
+            "name": "sidebar_button",
+            "type": "link",
+            "instructions": "Overrides 'Find Your Next Job' button",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
+                "value": "default"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": 1,
+    "description": "",
+    "modified": 1547407980
+}

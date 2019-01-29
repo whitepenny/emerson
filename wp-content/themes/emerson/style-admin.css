@@ -1,0 +1,12 @@
+body#tinymce.wp-editor p.intro {
+  font-size: 20px;
+}
+
+body#tinymce.wp-editor .highlight {
+  background: yellow;
+}
+
+body#tinymce.wp-editor h4.label {
+  font-weight: bold;
+  text-decoration: underline;
+}

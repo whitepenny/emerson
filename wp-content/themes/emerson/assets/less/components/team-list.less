@@ -1,0 +1,93 @@
+.team_list {
+  // padding: 10px 0;
+
+  @media @min_lg {
+    // padding: 20px 0;
+  }
+
+  @media @min_xl {
+    // padding: 30px 0;
+  }
+}
+
+.team_item {
+  .transition_delay_loop(10);
+
+  background: @white;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  @media @min_lg {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+}
+
+.team_item_image {
+  .block;
+
+  margin: 0 0 20px;
+}
+
+.team_item_container {
+  .contain;
+}
+
+.team_item_title {
+  .transition_link;
+  .gtsectra;
+
+  color: @black;
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 20px 0 5px;
+
+  @media @min_lg {
+    font-size: 36px;
+  }
+
+  a:hover & {
+    color: @red_mid;
+  }
+}
+
+.team_item {
+
+  .team_meta {
+    .transition_link;
+    .opensans_semibold;
+    .block;
+
+    color: @blue_mid;
+    font-size: 20px;
+    margin: 0;
+
+    @media @min_md {
+      font-size: 22px;
+    }
+  }
+
+  a:hover .team_meta {
+    color: @red_mid;
+  }
+}
+
+.team_item_link {
+  .block;
+}
+
+.team_item_content {
+  .opensans;
+
+  color: @gray_80;
+  font-size: 14px;
+  margin: 20px 0;
+
+  @media @min_md {
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0 0 5px;
+  }
+}

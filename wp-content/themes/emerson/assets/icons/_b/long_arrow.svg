@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="267px" height="17px" viewBox="0 0 267 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>Arrow</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Emerson-home-Copy" transform="translate(-99.000000, -1804.000000)" fill="#FF0000">
+            <g id="1" transform="translate(0.000000, 1740.000000)">
+                <g id="Arrow" transform="translate(99.000000, 64.137255)">
+                    <rect id="Rectangle-3-Copy-4" transform="translate(132.000000, 8.520697) scale(1, -1) translate(-132.000000, -8.520697) " x="0" y="7.01742919" width="264" height="3.00653595"></rect>
+                    <polygon id="Rectangle-3-Copy-8" transform="translate(261.903806, 5.608386) scale(1, -1) rotate(-45.000000) translate(-261.903806, -5.608386) " points="256.403806 4.10511825 267.403806 4.10511825 267.403806 7.1116542 256.403806 7.1116542"></polygon>
+                    <rect id="Rectangle-3-Copy-8" transform="translate(261.903806, 11.625815) rotate(-45.000000) translate(-261.903806, -11.625815) " x="256.403806" y="10.1225474" width="11" height="3.00653595"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

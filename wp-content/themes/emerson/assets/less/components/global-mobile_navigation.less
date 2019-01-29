@@ -1,0 +1,173 @@
+.mobile_nav_tray {
+  display: none;
+
+  &.fs-navigation-enabled {
+    .flex;
+
+    flex-direction: column;
+  }
+
+  &,
+  &.fs-navigation-enabled {
+    width: 300px;
+
+    background: @blue_mid;
+    box-shadow: 0 0 10px fade(@black, 50);
+    transform: translate3D(310px, 0, 0);
+  }
+
+  &.fs-navigation-open {
+    transform: translate3D(0, 0, 0);
+  }
+
+  .main_nav {
+    .block;
+
+    float: none;
+    padding: 35px;
+
+    ul {
+      float: none;
+    }
+
+    li {
+      .block;
+
+      float: none;
+    }
+
+    a {
+      color: @white;
+      font-size: 20px;
+      letter-spacing: 0;
+      margin: 5px 0;
+      padding: 5px;
+      text-transform: none;
+    }
+  }
+
+  .utility_nav {
+    .block;
+
+    float: none;
+    padding: 10px 35px;
+
+    a {
+      .inline_block;
+      
+      color: @white;
+      clear: both;
+      float: none;
+      font-size: 14px;
+      margin: 10px 0;
+      padding: 5px;
+      text-transform: uppercase;
+    }
+
+    .utility_nav_button {
+      border-color: @red_mid;
+      padding: 5px 20px;
+    }
+  }
+}
+
+.fs-navigation-overlay-content.fs-navigation-open {
+
+  &:before {
+    z-index: 10;
+  }
+}
+
+.fs-navigation-overlay-nav.fs-navigation-enabled {
+  z-index: 11;
+}
+
+.mobile_nav_handle {
+  display: none;
+
+  &.fs-navigation-enabled {
+    .block;
+    .right;
+    .opensans_semibold;
+    .transition_link;
+
+    border: 2px solid @blue_mid;
+    border-radius: 3px;
+    color: @blue_mid;
+    font-size: 14px;
+    margin: 12px 0 0;
+    padding: 6px 10px;
+    text-indent: 0;
+    text-transform: uppercase;
+
+    @media @min_md {
+      border-radius: 4px;
+      margin: 15px 0 0;
+      padding: 8px 15px;
+    }
+
+    &:hover,
+    &:focus {
+      background: @blue_mid;
+      color: @white;
+    }
+  }
+
+  //
+
+  span {
+    .inline_block;
+    .relative;
+
+    height: 2px;
+    width: 18px;
+
+    top: -1px;
+
+    background: @blue_mid;
+    box-shadow:
+      0 5px 0 @blue_mid,
+      0 -5px 0 @blue_mid;
+    content: '';
+    margin: 0 5px 0 0;
+    vertical-align: middle;
+    transition:
+      background 0.15s linear,
+      box-shadow 0.15s linear;
+  }
+
+  &:hover,
+  &:focus {
+
+    span {
+      background: @white;
+      box-shadow:
+        0 5px 0 @white,
+        0 -5px 0 @white;
+    }
+  }
+}
+
+//
+
+.mobile_social {
+  margin: auto 0 50px;
+  padding: 40px 30px;
+}
+
+.mobile_social_link {
+  .inline_block;
+
+  width: 36px;
+  height: 36px;
+
+  border-radius: 2px;
+  line-height: 34px;
+  margin: 0;
+  text-align: center;
+
+  &:hover,
+  &:focus {
+    background: fade(@blue_mid, 50);
+  }
+}

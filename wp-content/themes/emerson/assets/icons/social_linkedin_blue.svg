@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>Li</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Footer" transform="translate(-1316.000000, -359.000000)" fill="#11317F" fill-rule="nonzero">
+            <g id="SM">
+                <g transform="translate(578.000000, 354.000000)">
+                    <g id="Li" transform="translate(733.000000, 0.000000)">
+                        <g id="LI" transform="translate(5.090909, 5.090909)">
+                            <rect id="Rectangle-path" x="0.0103460411" y="5.76791789" width="4.02346041" height="11.4956012"></rect>
+                            <circle id="Oval" cx="2.02207625" cy="2.03184751" r="2.01173021"></circle>
+                            <path d="M17.2537478,10.9461114 C17.2537478,7.84402346 16.5847038,5.76791789 12.9687625,5.76791789 C11.2312023,5.76791789 10.0643988,6.41339589 9.58733138,7.31924927 L9.53790029,7.31924927 L9.53790029,5.76791789 L6.33292669,5.76791789 L6.33292669,17.2635191 L9.68274487,17.2635191 L9.68274487,11.5657243 C9.68274487,10.0632493 9.96668622,8.60848094 11.8255249,8.60848094 C13.6567742,8.60848094 13.8044927,10.3264985 13.8044927,11.6628622 L13.8044927,17.2640938 L17.253173,17.2640938 L17.253173,10.9461114 L17.2537478,10.9461114 Z" id="Shape"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

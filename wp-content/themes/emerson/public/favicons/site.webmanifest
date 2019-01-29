@@ -1,0 +1,19 @@
+{
+    "name": "Emerson Group",
+    "short_name": "Emerson Group",
+    "icons": [
+        {
+            "src": "android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "android-chrome-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#_a_f1_f2_d",
+    "background_color": "#_a_f1_f2_d",
+    "display": "standalone"
+}
