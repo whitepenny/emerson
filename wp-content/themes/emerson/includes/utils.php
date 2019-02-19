@@ -15,6 +15,9 @@ function eg_get_the_content( $post_id = false ) {
 	return $content;
 }
 
+// Add thumbnail support to bring in old post images
+
+add_theme_support( 'post-thumbnails' ); 
 
 // Check external link
 
