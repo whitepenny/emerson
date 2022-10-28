@@ -45,6 +45,7 @@ class PostCloner
 	*/
 	public function clonePost($id, $quantity = 1, $status = 'publish', $author = null)
 	{
+		if ( !current_user_can('edit_post', $id) ) return;
 		$this->original_id = $id;
 		$this->original_post = get_post( $id );
 		$this->clone_options['quantity'] = $quantity;
@@ -71,7 +72,7 @@ class PostCloner
 	*/
 	private function clonePostData()
 	{
-		$args = array(
+		$args = [
 			'comment_status' => $this->original_post->comment_status,
 			'ping_status'    => $this->original_post->ping_status,
 			'post_author'    => $this->clone_options['author'],
@@ -85,8 +86,8 @@ class PostCloner
 			'post_type'      => $this->original_post->post_type,
 			'to_ping'        => $this->original_post->to_ping,
 			'menu_order'     => $this->original_post->menu_order
-		);
-		$this->new_id = wp_insert_post($args);
+		];
+		$this->new_id = wp_insert_post(wp_slash($args));
 		$this->new_posts[] = $this->new_id;
 	}
 
@@ -103,14 +104,19 @@ class PostCloner
 	}
 
 	/**
-	* Clone the custom fields
+	* Clone the post meta
 	*/
 	private function cloneMeta()
 	{
-		$meta = get_post_meta($this->original_id);
-		foreach($meta as $key => $value){
-			foreach( $value as $entry ){
-				add_post_meta($this->new_id, $key, $entry);
+		$original_id = $this->original_id;
+		$new_id = $this->new_id;
+		$meta_keys = get_post_custom_keys($original_id);
+		foreach ( $meta_keys as $meta_key ) {
+			$meta_values = \get_post_custom_values($meta_key, $original_id);
+			delete_post_meta( $new_id, $meta_key );
+			foreach ( $meta_values as $meta_value ) {
+				$meta_value = \maybe_unserialize($meta_value );
+				add_post_meta( $new_id, $meta_key, wp_slash( $meta_value ) );
 			}
 		}
 	}

@@ -40,15 +40,11 @@ NestedPages.MenuLinks = function()
 		cssClasses : '[data-np-menu-css-classes]',
 		npStatus : '[data-np-menu-np-status]',
 		linkTarget : '[data-np-menu-link-target]',
-		menuTitle : '[data-np-menu-title]'
+		menuTitle : '[data-np-menu-title]',
+		parentPostType : '[data-np-menu-parent-post-type]'
 	}
 
 	plugin.search = new NestedPages.MenuSearch;
-
-	plugin.init = function()
-	{
-		plugin.bindEvents();
-	}
 
 	plugin.bindEvents = function()
 	{
@@ -151,7 +147,7 @@ NestedPages.MenuLinks = function()
 		$(plugin.selectors.saveButton).hide();
 		$(plugin.selectors.formDetails).hide();
 		$(plugin.selectors.formPlaceholder).show();
-		$(plugin.selectors.form).find('input').not('.parent_id').val('');
+		$(plugin.selectors.form).find('input').not('.parent_id').not('.parent-post-type').val('');
 		$(plugin.selectors.form).find(plugin.fields.linkTarget).val('_blank');
 		$(plugin.selectors.form).find('input[type="checkbox"]').attr('checked', false);
 		$(plugin.selectors.typeSelect).removeClass('active');
@@ -200,7 +196,7 @@ NestedPages.MenuLinks = function()
 	// Create the nested pages row for the new link
 	plugin.createRow = function()
 	{
-		var html = '<li id="menuItem_' + plugin.post.id + '" class="page-row published';
+		var html = '<li id="menuItem_' + plugin.post.id + '" class="page-row post-type-np-redirect published';
 		html += '">'
 
 		html += '<div class="row"><div class="child-toggle"><div class="child-toggle-spacer"></div></div><div class="row-inner">';
@@ -271,5 +267,5 @@ NestedPages.MenuLinks = function()
 		$(plugin.selectors.saveButton).attr('disabled', false);
 	}
 
-	return plugin.init();
+	return plugin.bindEvents();
 }

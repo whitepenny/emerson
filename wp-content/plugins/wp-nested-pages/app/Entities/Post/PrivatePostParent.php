@@ -13,7 +13,7 @@ class PrivatePostParent
 		add_filter('wp_dropdown_pages', [$this, 'metabox'], 10, 3);
 	}
 
-	public function metabox($output, $arguments, $pages)
+	public function metabox($output, $arguments = [], $pages = [])
 	{
 		global $post;
 		if ( !$post ) return $output;
@@ -32,6 +32,7 @@ class PrivatePostParent
 			'echo' => 0,
 			'post_status' => ['publish', 'private', 'draft'],
 		];
+		$args = apply_filters( 'page_attributes_dropdown_pages_args', $args, $post );
 
 		$defaults = [
 			'depth'	=> 0,

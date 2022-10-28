@@ -16,11 +16,13 @@ $background_options = eg_image_background_image_callout( $image['id'] );
       <div class="page_content image_break_content">
         <?php echo $content; ?>
       </div>
+      <?php if ( ! empty( $buttons ) ) : ?>
       <div class="image_break_buttons">
         <?php foreach ( $buttons as $button ) : ?>
         <a href="<?php echo $button['link']['url']; ?>" class="image_break_button image_break_button_<?php echo $button['color']; ?>"><?php echo $button['link']['title']; ?></a>
         <?php endforeach; ?>
       </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>

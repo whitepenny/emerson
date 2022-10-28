@@ -6,6 +6,7 @@
             "key": "field_5b97e693d50d9",
             "label": "Page Color",
             "name": "page_color",
+            "aria-label": "",
             "type": "select",
             "instructions": "",
             "required": 0,
@@ -31,6 +32,7 @@
             "key": "field_59d6497717c50",
             "label": "Page Title",
             "name": "page_title",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 1,
@@ -50,6 +52,7 @@
             "key": "field_59d6498d17c51",
             "label": "Page Image",
             "name": "page_image",
+            "aria-label": "",
             "type": "image",
             "instructions": "",
             "required": 0,
@@ -77,6 +80,42 @@
             "max_height": "",
             "max_size": "",
             "mime_types": ""
+        },
+        {
+            "key": "field_635bd3fa19581",
+            "label": "Page Header Content",
+            "name": "page_header_content",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_635bd41019582",
+            "label": "Page Header Link",
+            "name": "page_header_link",
+            "aria-label": "",
+            "type": "link",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array"
         }
     ],
     "location": [
@@ -108,7 +147,8 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
-    "active": 1,
+    "active": true,
     "description": "",
-    "modified": 1537980669
+    "show_in_rest": 0,
+    "modified": 1666962506
 }

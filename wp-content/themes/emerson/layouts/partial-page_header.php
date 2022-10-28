@@ -9,6 +9,17 @@ $background_options = eg_image_background_page_header( $page_image['ID'] );
       <?php if ( ! empty( $page_title ) ) : ?>
       <h2 class="page_title"><?php echo eg_format_content( $page_title ); ?></h2>
       <?php endif; ?>
+
+      <?php if($page_header_content): ?>
+        <div class="page-header-content">
+        <?php echo $page_header_content; ?>  
+        </div>
+        
+      <?php endif; ?>
+
+      <?php if($page_header_link): ?>
+        <a class="page-header-link" href="<?php echo $page_header_link['url'] ?>"><?php echo $page_header_link['title']; ?></a>
+      <?php endif; ?>
     </div>
   </div>
 </div>

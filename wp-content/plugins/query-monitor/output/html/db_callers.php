@@ -5,13 +5,34 @@
  * @package query-monitor
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class QM_Output_Html_DB_Callers extends QM_Output_Html {
+
+	/**
+	 * Collector instance.
+	 *
+	 * @var QM_Collector_DB_Callers Collector.
+	 */
+	protected $collector;
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
-		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 30 );
+		add_filter( 'qm/output/panel_menus', array( $this, 'panel_menu' ), 30 );
 	}
 
+	/**
+	 * @return string
+	 */
+	public function name() {
+		return __( 'Queries by Caller', 'query-monitor' );
+	}
+
+	/**
+	 * @return void
+	 */
 	public function output() {
 
 		$data = $this->collector->get_data();
@@ -45,16 +66,18 @@ class QM_Output_Html_DB_Callers extends QM_Output_Html {
 
 			foreach ( $data['times'] as $row ) {
 				$total_time += $row['ltime'];
-				$stime       = number_format_i18n( $row['ltime'], 4 );
+				$stime = number_format_i18n( $row['ltime'], 4 );
 
 				echo '<tr>';
-				echo '<td class="qm-ltr"><a href="#" class="qm-filter-trigger" data-qm-target="db_queries-wpdb" data-qm-filter="caller" data-qm-value="' . esc_attr( $row['caller'] ) . '"><code>' . esc_html( $row['caller'] ) . '</code></a></td>';
+				echo '<td class="qm-ltr">';
+				echo self::build_filter_trigger( 'db_queries-wpdb', 'caller', $row['caller'], '<code>' . esc_html( $row['caller'] ) . '</code>' ); // WPCS: XSS ok;
+				echo '</td>';
 
 				foreach ( $data['types'] as $type_name => $type_count ) {
 					if ( isset( $row['types'][ $type_name ] ) ) {
 						echo "<td class='qm-num'>" . esc_html( number_format_i18n( $row['types'][ $type_name ] ) ) . '</td>';
 					} else {
-						echo "<td class='qm-num'>&nbsp;</td>";
+						echo "<td class='qm-num'></td>";
 					}
 				}
 
@@ -69,7 +92,7 @@ class QM_Output_Html_DB_Callers extends QM_Output_Html {
 			$total_stime = number_format_i18n( $total_time, 4 );
 
 			echo '<tr>';
-			echo '<td>&nbsp;</td>';
+			echo '<td></td>';
 
 			foreach ( $data['types'] as $type_name => $type_count ) {
 				echo '<td class="qm-num">' . esc_html( number_format_i18n( $type_count ) ) . '</td>';
@@ -92,13 +115,17 @@ class QM_Output_Html_DB_Callers extends QM_Output_Html {
 		}
 	}
 
-	public function admin_menu( array $menu ) {
+	/**
+	 * @param array<string, mixed[]> $menu
+	 * @return array<string, mixed[]>
+	 */
+	public function panel_menu( array $menu ) {
 		$dbq = QM_Collectors::get( 'db_queries' );
 
 		if ( $dbq ) {
 			$dbq_data = $dbq->get_data();
 			if ( isset( $dbq_data['times'] ) ) {
-				$menu[] = $this->menu( array(
+				$menu['qm-db_queries-$wpdb']['children'][] = $this->menu( array(
 					'title' => esc_html__( 'Queries by Caller', 'query-monitor' ),
 				) );
 			}
@@ -109,8 +136,13 @@ class QM_Output_Html_DB_Callers extends QM_Output_Html {
 
 }
 
+/**
+ * @param array<string, QM_Output> $output
+ * @param QM_Collectors $collectors
+ * @return array<string, QM_Output>
+ */
 function register_qm_output_html_db_callers( array $output, QM_Collectors $collectors ) {
-	$collector = $collectors::get( 'db_callers' );
+	$collector = QM_Collectors::get( 'db_callers' );
 	if ( $collector ) {
 		$output['db_callers'] = new QM_Output_Html_DB_Callers( $collector );
 	}

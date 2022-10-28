@@ -1,0 +1,170 @@
+.page-header-content {
+    color: @white;
+    font-size: 18px;
+    
+}
+
+.page-header-link {
+    .button_solid_red;
+    display: inline-block;
+}
+
+// Callout Box
+
+.callout-box {
+    color: @white;
+    padding: 60px;
+    margin: 40px 0;
+    text-align: center;
+
+    h2 {
+        font-size: 56px;
+        font-weight: normal;
+        margin: 0;
+        display: inline-block;
+        text-align: center;
+        padding-bottom: 10px;
+        position: relative;
+        margin-bottom: 20px;
+
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            display: block;
+            width: 130%;
+            height: 3px;
+            background-color: @red_mid;
+            margin-left: -15%;
+            
+            
+        }
+    }
+
+    p {
+        max-width: 500px;
+        margin: 0 auto;
+        font-size: 18px;;
+        .opensans;
+        font-weight: bold;
+    }
+}
+
+// List Left Quote Right
+
+.list-left-quote-right {
+    margin: 100px 0 60px;
+}
+
+.numbered-list-item {
+    .opensans;
+    display: flex;
+    margin-bottom: 40px;
+    h3 {
+        .gtsectra;
+        font-weight: bold;
+        font-size: 36px;
+        line-height: 1.25;
+        margin: 0;
+    }
+
+    .number {
+        border-radius: 50%;
+        background: @blue_mid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        color: @white;
+        .opensans;
+        font-size: 24px;
+        flex: none;
+        margin-right: 30px;
+        line-height: 1;
+    }
+}
+
+.quote {
+    background: @blue_gray;
+    padding: 60px 40px;
+}
+
+.quote-container {
+    border-left: 3px solid @red_mid;
+    padding-left: 20px;
+}
+
+.quote-content {
+    color: @blue_mid;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 1.25;
+}
+
+.quote-citation {
+    text-transform: uppercase;
+    color: @blue_mid;
+    .opensans;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-top: 30px;
+}
+
+// Blue Content
+
+.blue-content {
+    margin: 20px;
+    background: @blue_gray;
+    padding: 40px 0;
+
+    @media @min_md {
+        padding: 100px 0;
+    }
+
+    h2 {
+        .gtsectra;
+        font-weight: bold;
+        margin: 0;
+        color: @blue_mid;
+        max-width: 800px;
+        margin: 0 auto;
+
+        @media @min_md {
+            font-size: 36px;
+            line-height: 1.25;
+        }
+    }
+}
+
+.side-by-side-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    justify-content: center;
+  
+
+    ul {
+        margin: 40px 40px;
+        list-style: none;
+        padding: 0;
+        font-size: 18px;
+        .opensans;
+        color: @blue_mid;
+        width: 100%;
+
+        @media @min_md {
+            width: auto;
+        }
+        
+        li {
+            border-bottom: 2px solid lighten(@blue_mid, 60%);
+            padding: 10px;
+            width: 100%;
+
+            @media @min_md {
+                width: 400px;
+            }
+        }
+    }
+}

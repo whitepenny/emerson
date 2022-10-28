@@ -1,6 +1,7 @@
 <div class="wpfc-checkbox-list">
 	<?php
 		$types = array("aac",
+                        "avif",
                         "css",
                         "eot",
                         "gif",
@@ -15,7 +16,10 @@
                         "pdf",
                         "png",
                         "svg",
+                        "swf",
                         "ttf",
+                        "webm",
+                        "webp",
                         "woff",
                         "woff2"
                         );

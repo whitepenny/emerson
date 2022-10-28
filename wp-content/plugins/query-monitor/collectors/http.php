@@ -5,29 +5,126 @@
  * @package query-monitor
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class QM_Collector_HTTP extends QM_Collector {
 
-	public $id         = 'http';
-	private $transport = null;
-	private $info      = null;
+	/**
+	 * @var string
+	 */
+	public $id = 'http';
 
-	public function name() {
-		return __( 'HTTP API Requests', 'query-monitor' );
+	/**
+	 * @var string|null
+	 */
+	private $transport = null;
+
+	/**
+	 * @var mixed|null
+	 */
+	private $info = null;
+
+	/**
+	 * @return void
+	 */
+	public function set_up() {
+
+		parent::set_up();
+
+		add_filter( 'http_request_args', array( $this, 'filter_http_request_args' ), 9999, 2 );
+		add_filter( 'pre_http_request', array( $this, 'filter_pre_http_request' ), 9999, 3 );
+		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
+
+		add_action( 'requests-curl.before_request', array( $this, 'action_curl_before_request' ), 9999 );
+		add_action( 'requests-curl.after_request', array( $this, 'action_curl_after_request' ), 9999, 2 );
+		add_action( 'requests-fsockopen.before_request', array( $this, 'action_fsockopen_before_request' ), 9999 );
+		add_action( 'requests-fsockopen.after_request', array( $this, 'action_fsockopen_after_request' ), 9999, 2 );
+
 	}
 
-	public function __construct() {
+	/**
+	 * @return void
+	 */
+	public function tear_down() {
+		remove_filter( 'http_request_args', array( $this, 'filter_http_request_args' ), 9999 );
+		remove_filter( 'pre_http_request', array( $this, 'filter_pre_http_request' ), 9999 );
+		remove_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999 );
 
-		parent::__construct();
+		remove_action( 'requests-curl.before_request', array( $this, 'action_curl_before_request' ), 9999 );
+		remove_action( 'requests-curl.after_request', array( $this, 'action_curl_after_request' ), 9999 );
+		remove_action( 'requests-fsockopen.before_request', array( $this, 'action_fsockopen_before_request' ), 9999 );
+		remove_action( 'requests-fsockopen.after_request', array( $this, 'action_fsockopen_after_request' ), 9999 );
 
-		add_filter( 'http_request_args', array( $this, 'filter_http_request_args' ), 99, 2 );
-		add_filter( 'pre_http_request',  array( $this, 'filter_pre_http_request' ), 99, 3 );
-		add_action( 'http_api_debug',    array( $this, 'action_http_api_debug' ), 99, 5 );
+		parent::tear_down();
+	}
 
-		add_action( 'requests-curl.before_request',      array( $this, 'action_curl_before_request' ), 99 );
-		add_action( 'requests-curl.after_request',       array( $this, 'action_curl_after_request' ), 99, 2 );
-		add_action( 'requests-fsockopen.before_request', array( $this, 'action_fsockopen_before_request' ), 99 );
-		add_action( 'requests-fsockopen.after_request',  array( $this, 'action_fsockopen_after_request' ), 99, 2 );
+	/**
+	 * @return array<int, string>
+	 */
+	public function get_concerned_actions() {
+		$actions = array(
+			'http_api_curl',
+			'requests-multiple.request.complete',
+			'requests-request.progress',
+			'requests-transport.internal.parse_error',
+			'requests-transport.internal.parse_response',
+		);
+		$transports = array(
+			'requests',
+			'curl',
+			'fsockopen',
+		);
 
+		foreach ( $transports as $transport ) {
+			$actions[] = "requests-{$transport}.after_headers";
+			$actions[] = "requests-{$transport}.after_multi_exec";
+			$actions[] = "requests-{$transport}.after_request";
+			$actions[] = "requests-{$transport}.after_send";
+			$actions[] = "requests-{$transport}.before_multi_add";
+			$actions[] = "requests-{$transport}.before_multi_exec";
+			$actions[] = "requests-{$transport}.before_parse";
+			$actions[] = "requests-{$transport}.before_redirect";
+			$actions[] = "requests-{$transport}.before_redirect_check";
+			$actions[] = "requests-{$transport}.before_request";
+			$actions[] = "requests-{$transport}.before_send";
+			$actions[] = "requests-{$transport}.remote_host_path";
+			$actions[] = "requests-{$transport}.remote_socket";
+		}
+
+		return $actions;
+	}
+
+	/**
+	 * @return array<int, string>
+	 */
+	public function get_concerned_filters() {
+		return array(
+			'block_local_requests',
+			'http_request_args',
+			'http_response',
+			'https_local_ssl_verify',
+			'https_ssl_verify',
+			'pre_http_request',
+			'use_curl_transport',
+			'use_streams_transport',
+		);
+	}
+
+	/**
+	 * @return array<int, string>
+	 */
+	public function get_concerned_constants() {
+		return array(
+			'WP_PROXY_HOST',
+			'WP_PROXY_PORT',
+			'WP_PROXY_USERNAME',
+			'WP_PROXY_PASSWORD',
+			'WP_PROXY_BYPASS_HOSTS',
+			'WP_HTTP_BLOCK_EXTERNAL',
+			'WP_ACCESSIBLE_HOSTS',
+		);
 	}
 
 	/**
@@ -35,28 +132,52 @@ class QM_Collector_HTTP extends QM_Collector {
 	 *
 	 * Used to log the request, and to add the logging key to the arguments array.
 	 *
-	 * @param  array  $args HTTP request arguments.
-	 * @param  string $url  The request URL.
-	 * @return array        HTTP request arguments.
+	 * @param  array<string, mixed> $args HTTP request arguments.
+	 * @param  string               $url  The request URL.
+	 * @return array<string, mixed> HTTP request arguments.
 	 */
 	public function filter_http_request_args( array $args, $url ) {
-		$trace = new QM_Backtrace();
+		$trace = new QM_Backtrace( array(
+			'ignore_hook' => array(
+				current_filter() => true,
+			),
+			'ignore_class' => array(
+				'WP_Http' => true,
+			),
+			'ignore_func' => array(
+				'wp_safe_remote_request' => true,
+				'wp_safe_remote_get' => true,
+				'wp_safe_remote_post' => true,
+				'wp_safe_remote_head' => true,
+				'wp_remote_request' => true,
+				'wp_remote_get' => true,
+				'wp_remote_post' => true,
+				'wp_remote_head' => true,
+				'wp_remote_fopen' => true,
+				'download_url' => true,
+				'vip_safe_wp_remote_get' => true,
+				'vip_safe_wp_remote_request' => true,
+				'wpcom_vip_file_get_contents' => true,
+			),
+		) );
+
 		if ( isset( $args['_qm_key'] ) ) {
 			// Something has triggered another HTTP request from within the `pre_http_request` filter
 			// (eg. WordPress Beta Tester does this). This allows for one level of nested queries.
 			$args['_qm_original_key'] = $args['_qm_key'];
-			$start                    = $this->data['http'][ $args['_qm_key'] ]['start'];
+			$start = $this->data['http'][ $args['_qm_key'] ]['start'];
 		} else {
 			$start = microtime( true );
 		}
-		$key                        = microtime( true ) . $url;
+		$key = microtime( true ) . $url;
 		$this->data['http'][ $key ] = array(
-			'url'   => $url,
-			'args'  => $args,
+			'url' => $url,
+			'args' => $args,
 			'start' => $start,
-			'trace' => $trace,
+			'filtered_trace' => $trace->get_filtered_trace(),
+			'component' => $trace->get_component(),
 		);
-		$args['_qm_key']            = $key;
+		$args['_qm_key'] = $key;
 		return $args;
 	}
 
@@ -67,10 +188,10 @@ class QM_Collector_HTTP extends QM_Collector {
 	 * $response should be one of boolean false, an array, or a `WP_Error`, but be aware that plugins
 	 * which short-circuit the request using this filter may (incorrectly) return data of another type.
 	 *
-	 * @param bool|array|WP_Error $response The preemptive HTTP response. Default false.
-	 * @param array               $args     HTTP request arguments.
-	 * @param string              $url      The request URL.
-	 * @return bool|array|WP_Error          The preemptive HTTP response.
+	 * @param bool|mixed[]|WP_Error $response The preemptive HTTP response. Default false.
+	 * @param array<string, mixed>  $args     HTTP request arguments.
+	 * @param string                $url      The request URL.
+	 * @return bool|mixed[]|WP_Error The preemptive HTTP response.
 	 */
 	public function filter_pre_http_request( $response, array $args, $url ) {
 
@@ -88,11 +209,12 @@ class QM_Collector_HTTP extends QM_Collector {
 	/**
 	 * Debugging action for the HTTP API.
 	 *
-	 * @param mixed  $response A parameter which varies depending on $action.
-	 * @param string $action   The debug action. Currently one of 'response' or 'transports_list'.
-	 * @param string $class    The HTTP transport class name.
-	 * @param array  $args     HTTP request arguments.
-	 * @param string $url      The request URL.
+	 * @param mixed                $response A parameter which varies depending on $action.
+	 * @param string               $action   The debug action. Currently one of 'response' or 'transports_list'.
+	 * @param string               $class    The HTTP transport class name.
+	 * @param array<string, mixed> $args     HTTP request arguments.
+	 * @param string               $url      The request URL.
+	 * @return void
 	 */
 	public function action_http_api_debug( $response, $action, $class, $args, $url ) {
 
@@ -117,18 +239,34 @@ class QM_Collector_HTTP extends QM_Collector {
 
 	}
 
+	/**
+	 * @return void
+	 */
 	public function action_curl_before_request() {
 		$this->transport = 'curl';
 	}
 
+	/**
+	 * @param mixed $headers
+	 * @param mixed[] $info
+	 * @return void
+	 */
 	public function action_curl_after_request( $headers, array $info = null ) {
 		$this->info = $info;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function action_fsockopen_before_request() {
 		$this->transport = 'fsockopen';
 	}
 
+	/**
+	 * @param mixed $headers
+	 * @param mixed[] $info
+	 * @return void
+	 */
 	public function action_fsockopen_after_request( $headers, array $info = null ) {
 		$this->info = $info;
 	}
@@ -136,16 +274,17 @@ class QM_Collector_HTTP extends QM_Collector {
 	/**
 	 * Log an HTTP response.
 	 *
-	 * @param array|WP_Error $response The HTTP response.
-	 * @param array          $args     HTTP request arguments.
-	 * @param string         $url      The request URL.
+	 * @param mixed[]|WP_Error     $response The HTTP response.
+	 * @param array<string, mixed> $args     HTTP request arguments.
+	 * @param string               $url      The request URL.
+	 * @return void
 	 */
 	public function log_http_response( $response, array $args, $url ) {
-		$this->data['http'][ $args['_qm_key'] ]['end']      = microtime( true );
+		$this->data['http'][ $args['_qm_key'] ]['end'] = microtime( true );
 		$this->data['http'][ $args['_qm_key'] ]['response'] = $response;
-		$this->data['http'][ $args['_qm_key'] ]['args']     = $args;
+		$this->data['http'][ $args['_qm_key'] ]['args'] = $args;
 		if ( isset( $args['_qm_original_key'] ) ) {
-			$this->data['http'][ $args['_qm_original_key'] ]['end']      = $this->data['http'][ $args['_qm_original_key'] ]['start'];
+			$this->data['http'][ $args['_qm_original_key'] ]['end'] = $this->data['http'][ $args['_qm_original_key'] ]['start'];
 			$this->data['http'][ $args['_qm_original_key'] ]['response'] = new WP_Error( 'http_request_not_executed', sprintf(
 				/* translators: %s: Hook name */
 				__( 'Request not executed due to a filter on %s', 'query-monitor' ),
@@ -153,33 +292,16 @@ class QM_Collector_HTTP extends QM_Collector {
 			) );
 		}
 
-		$this->data['http'][ $args['_qm_key'] ]['info']      = $this->info;
+		$this->data['http'][ $args['_qm_key'] ]['info'] = $this->info;
 		$this->data['http'][ $args['_qm_key'] ]['transport'] = $this->transport;
-		$this->info      = null;
+		$this->info = null;
 		$this->transport = null;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function process() {
-
-		foreach ( array(
-			'WP_PROXY_HOST',
-			'WP_PROXY_PORT',
-			'WP_PROXY_USERNAME',
-			'WP_PROXY_PASSWORD',
-			'WP_PROXY_BYPASS_HOSTS',
-			'WP_HTTP_BLOCK_EXTERNAL',
-			'WP_ACCESSIBLE_HOSTS',
-		) as $var ) {
-			if ( defined( $var ) && constant( $var ) ) {
-				$val = constant( $var );
-				if ( true === $val ) {
-					# @TODO this transformation should happen in the output, not the collector
-					$val = 'true';
-				}
-				$this->data['vars'][ $var ] = $val;
-			}
-		}
-
 		$this->data['ltime'] = 0;
 
 		if ( ! isset( $this->data['http'] ) ) {
@@ -198,22 +320,23 @@ class QM_Collector_HTTP extends QM_Collector {
 			'airplane_mode_enabled',
 		) );
 
+		$home_host = (string) parse_url( home_url(), PHP_URL_HOST );
+
 		foreach ( $this->data['http'] as $key => & $http ) {
 
 			if ( ! isset( $http['response'] ) ) {
 				// Timed out
 				$http['response'] = new WP_Error( 'http_request_timed_out', __( 'Request timed out', 'query-monitor' ) );
-				$http['end']      = floatval( $http['start'] + $http['args']['timeout'] );
+				$http['end'] = floatval( $http['start'] + $http['args']['timeout'] );
 			}
 
 			if ( is_wp_error( $http['response'] ) ) {
 				if ( ! in_array( $http['response']->get_error_code(), $silent, true ) ) {
 					$this->data['errors']['alert'][] = $key;
 				}
-				$http['type'] = __( 'Error', 'query-monitor' );
+				$http['type'] = -1;
 			} elseif ( ! $http['args']['blocking'] ) {
-				/* translators: A non-blocking HTTP API request */
-				$http['type'] = __( 'Non-blocking', 'query-monitor' );
+				$http['type'] = -2;
 			} else {
 				$http['type'] = intval( wp_remote_retrieve_response_code( $http['response'] ) );
 				if ( $http['type'] >= 400 ) {
@@ -223,21 +346,20 @@ class QM_Collector_HTTP extends QM_Collector {
 
 			$http['ltime'] = ( $http['end'] - $http['start'] );
 
-			if ( isset( $http['info'] ) ) {
-				if ( isset( $http['info']['total_time'] ) ) {
-					$http['ltime'] = $http['info']['total_time'];
-				}
-
-				if ( ! empty( $http['info']['url'] ) ) {
-					if ( rtrim( $http['url'], '/' ) !== rtrim( $http['info']['url'], '/' ) ) {
-						$http['redirected_to'] = $http['info']['url'];
-					}
+			if ( isset( $http['info'] ) && ! empty( $http['info']['url'] ) ) {
+				// Ignore query variables when detecting a redirect.
+				$from = untrailingslashit( preg_replace( '#\?[^$]+$#', '', $http['url'] ) );
+				$to = untrailingslashit( preg_replace( '#\?[^$]+$#', '', $http['info']['url'] ) );
+				if ( $from !== $to ) {
+					$http['redirected_to'] = $http['info']['url'];
 				}
 			}
 
 			$this->data['ltime'] += $http['ltime'];
 
-			$http['component'] = $http['trace']->get_component();
+			$host = (string) parse_url( $http['url'], PHP_URL_HOST );
+
+			$http['local'] = ( $host === $home_host );
 
 			$this->log_type( $http['type'] );
 			$this->log_component( $http['component'], $http['ltime'], $http['type'] );

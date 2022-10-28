@@ -1,11 +1,11 @@
 ﻿=== Nested Pages ===
 Contributors: kylephillips
-Donate link: http://nestedpages.com/
+Donate link: https://github.com/sponsors/kylephillips/
 Tags: pages, admin, nested, tree view, page tree, sort, quick edit, structure
 Requires at least: 3.8
-Tested up to: 5.0
+Tested up to: 6.0
 Requires PHP: 5.4
-Stable tag: 3.0.6
+Stable tag: 3.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,9 @@ Yes! Visit Settings > Nested Pages > Post Types to configure thumbnail settings 
 = Nested Pages changes my permalink structure. How do I stop that? =
 Nested Pages uses the same ordering methodology as WordPress core. The plugin offers an enhanced interface to achieve the same results. Parent/Child relationships are used in conjunction with the post menu_order field to nest and order posts/pages. There is currently no option to disable this core feature.
 
+= Can I generate a menu using a custom post type? =
+No. The menu synchronization currently only works within the pages post type. 
+
 
 == Screenshots ==
 
@@ -102,8 +105,146 @@ Nested Pages uses the same ordering methodology as WordPress core. The plugin of
 
 == Changelog ==
 
+= 3.2.1 =
+* Reverts previous wp_update_post change to prevent server errors on large sites. Replaces with optional "nestedpages_use_update_post" filter to enable hook when needed.
+
+= 3.2.0 =
+* Resolves issue where post_updated action was not firing after reordering of nested view.
+* Adds ability to save a custom URL for pages in the nav menu (Example: outputting an anchor link rather than the page's link). To add a custom link, select quick edit, followed by the "Menu Options" tab. There is a new "Custom URL" input.
+* Corrects previous version's Yoast indicator display.
+* Fixes bug where padding was not reset correctly when dragging a sub-level item to the primary/main level
+
+= 3.1.22 =
+* Fixes deprecation notice from new Yoast release
+
+= 3.1.21 =
+* Fixes issue where Nested Pages menu persists in some instances when "Disable menu completely" is checked/enabled.
+* Tested with WordPress V6
+* Security Updates
+
+= 3.1.20 =
+* Fixes bug where menu item descriptions (Added in the Appearance > Menus interface) were being removed when synchronizing the Nested Pages menu
+* Removes deprecation notice from authors dropdown in quick edit interface
+* Adds 'nestedpages_row_parent_css_classes' developer filter for filtering css classes output in each row's parent <li> element
+* Adds 'nestedpages_new_post' developer filter for filtering new posts before they are added (through child pages or through the "Add Multiple" interface)
+
+= 3.1.19 =
+* Fixes dragging/sorting bug introduced in WordPress version 5.9.
+
+= 3.1.18 =
+* Fixes issue where some custom blocks were not duplicating when cloning a post.
+
+= 3.1.17 =
+* Adds background saving of post status selection (Selecting "Published" in the post status filter will now persist on page reload)
+* Fixes bugs in admin customization related to addition of menu items added by other plugins
+* Security Update (Thanks to Chloe Chamberland at Wordfence for reporting)
+
+= 3.1.16 =
+* Includes security updates. Thanks to Ram Gall at Wordfence for reporting
+
+= 3.1.15 = 
+* Action added for outputting markup along with the add new/add multiple buttons (nestedpages_top_buttons)
+* PHP 8 deprecation errors corrected
+* Tested with WordPress v5.8
+
+= 3.1.14 =
+* Additional security enhancements (Thanks Nico Mollet)
+* Developer improvements through added filters and filter usage corrections (Thanks Bjørnar Tollaksen & Alexandre Sadowski)
+* Adds post title filter for customizing title display beyond the_title filter
+
+= 3.1.13 =
+* Corrects permission issues introduced in previous update
+
+= 3.1.12 =
+* Includes security updates
+* Fixes bug where posts not appearing when filtering by a non top-level hierarchical taxonomy. Allows order sorting while the list is filtered (not parent order)
+* Adds ability to save and synchronize post type archive menu items when using menu sync
+
+= 3.1.11 =
+* Security Update.
+
+= 3.1.10 =
+* Updates German translations.
+* Adds support for preview_post_link filter.
+* Bug fixes in WPML integration (thanks to Timothee Moulin).
+* Fixes issue where menu options where still available under the quick edit and bulk edit forms if the menu sync was disabled completely.
+* Fixes issue where "Hide in Nested View" option was still available under the bulk edit form if the field was disabled through the plugin settings.
+* Links full page editor admin back to nested view if the "replace menu" option is selected for the post type.
+* Removes trash dropdown selection on posts with no children.
+* Adds option to include private pages in the generated menu.
+* Allows users with edit_pages/edit_posts capabilities to see "new" options for submitting non-published content (following core functionality).
+
+= 3.1.9 =
+* Adds a custom sorting user capability for each public post type: nestedpages_sort_$type, enabling control of capabilities through 3rd party plugins. 
+* Adds filter for sorting capability: nestedpages_sort_capability. Filter passes 3 parameters: $grant_capability (boolean), $type (post type name), and $role (user role object)
+* Adds a plugin option for disabling the sort view based on user role.
+* Adds filters for each post type to allow/disable the sort view based on user role and post type: nestedpages_sort_view_$type. Filter returns 2 parameters: $grant_access (boolean), and $roles (array of roles assigned to the current user).
+* Updates Dutch translation (Thank you to Arno Vije).
+* Tested in WordPress version 5.4.
+
+= 3.1.8 =
+* Fixes conflict with Subpages Expanded plugin where sidebar selections under the appearance > widgets screen was broken
+* Fixes bug where setting a page to anything other than published was not removing menu items during sync
+
+= 3.1.7 =
+* Updates quick edit interface.
+* Adds filters for "Sticky" text indicator in post rows. 
+
+= 3.1.6 =
+* Adds filters for making "Make Sticky" quick edit form field available for any post type. 
+* Adds filter for customizing the "Make Sticky" label text.
+* Bug fixes in submenu display when using the admin customization feature.
+* Adds new feature to hierarchical post types that allow trashing of pages and all children.
+* Fixes bug where adding/appending a child post/page was not saving the correct menu order
+
+= 3.1.5 =
+* Removes link item in dropdown from non-page hierarchical post types, replaces with filterable boolean
+* Enhances modal UI when deleting an item
+
+= 3.1.4 =
+* Adds support for custom statuses, configurable by post type. To enable statuses for a specific post type, visit the plugin settings: Settings > Nested Pages > Post Types. Toggle the post type. If there are custom statuses available, a field titled "Enable Custom Statuses" will be available to select statuses.
+* Updates edit target for "link" row items to link to edit post screen where applicable.
+* Updates modal UI for adding multiple pages and adding links
+
+= 3.1.3 =
+* Updates nesting interface to use an indented style. To revert to the previous format, visit Settings > Nested Pages and select the checkbox titled "Use the classic (non-indented) hierarchy display."
+* Fixes bug where submenus were being removed after saving a new admin menu customization and reordering the item.
+* Enhances translation capabilities by replacing hardcoded strings with proper I18n functions.
+
+= 3.1.2 =
+* Adds filter to role capabilities (for adding items to customized admin menus with custom capabilities).
+
+= 3.1.1 =
+* Removes ability to hide Settings and Nested Pages menus from administrators within the admin customization interface (removing items hides links to necessary admin sections).
+* Adds ability to reset admin menu settings by clicking a single button
+* Fixes bug in new admin menu feature where submenus added by other plugins were not being displayed if a custom menu was in use.
+
+= 3.1.0 =
+* Adds new feature for customizing the order, visibility, and labels of the admin menu. To view the feature, visit Settings > Nested Pages > Admin Customization > Admin Menu. Important: once custom menus have been configured, new menu items added by other plugins may not appear upon activation. To add these items, revisit the Nested Pages settings and reconfigure the menus with the new items (they will appear at the bottom of the customized menu in the drag and drop interface). While menus may be configured for each user group, the plugin does not set any permissions. While items may be hidden from the menu, they will still be accessible with a direct link if the user has the appropriate permissions.
+* Adds filters for adding basic custom fields to the quick edit interface. Currently supported field types include text, date, and select. See https://gist.github.com/kylephillips/236d0a90aa2ea6fb628c5c1e4010f7be for example usage.
+
+= 3.0.11 =
+* Adds filters for "Sort/Nested View" and "Default" labels.
+* Fixes issue where serialized meta data was not being saved properly during cloning.
+
+= 3.0.10 =
+* Fixes issue with translation file naming that was preventing plugin translations from loading.
+* Adds settings action to reset user preferences (toggled/visible pages). For clearing user meta that may has become unnormalized during site/other plugin updates, resulting in PHP errors in the listing view.
+
+= 3.0.9 =
+* Fixes Javascript bug introduced in v3.0.8 resulting in console error on page edit screen.
+
+= 3.0.8 =
+* Security Fix: Fixes bug where contributors could quick edit posts not authored by themselves.
+* Adds filters for displaying individual row action/links. 
+* Fixes bug where submenu was not expanded when editing a single page, and "replace default" is selected.
+* Fixes bug where toggle icon still displays when all child items are in the trash.
+* Adds filters for taxonomies and terms in the listing interface.
+* Fixes bug where setting a link item to hide in nav menu doesn't remove the associated menu item.
+
 = 3.0.7 =
 * Adds support for "Dark Mode" plugin.
+* Tested in WordPress v5
 
 = 3.0.6 =
 * Fixes issue introduced in v3.0.3 where some custom post/page dropdown fields were failing to show.

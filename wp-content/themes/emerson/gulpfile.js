@@ -14,6 +14,7 @@ var sourcemaps     = require('gulp-sourcemaps');
 var svgSprite      = require('gulp-svg-sprites');
 var svg2png        = require('gulp-svg2png');
 var uglify         = require('gulp-uglify');
+var livereload     = require('gulp-livereload');
 
 var lessImportNPM  = require('less-plugin-npm-import');
 
@@ -44,12 +45,6 @@ gulp.task('images', function () {
     .pipe(gulp.dest('./public/images'));
 });
 
-// Fonts
-gulp.task('fonts', function () {
-  return gulp.src('./assets/fonts/**/*')
-    .pipe(gulp.dest('./public/fonts'));
-});
-
 // Less
 gulp.task('styles', function() {
   return gulp.src('./assets/less/*.less')
@@ -59,14 +54,15 @@ gulp.task('styles', function() {
       plugins: [ new lessImportNPM() ]
     }))
     .pipe(autoprefixer({
-      browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1', 'ie >= 10']
+      // browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1', 'ie >= 10']
     }))
     .pipe(cleanCSS({
       compatibility: 'ie10',
       inline: ['none']
     }))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./public/css'));
+    .pipe(gulp.dest('./public/css'))
+    .pipe(livereload());
 });
 
 // JS
@@ -83,7 +79,8 @@ gulp.task('scripts', function() {
     .pipe(jshint())
     .pipe(uglify())
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./public/js'));
+    .pipe(gulp.dest('./public/js'))
+    .pipe(livereload());
 });
 
 // Modernizr
@@ -107,84 +104,86 @@ gulp.task('modernizr', function () {
 });
 
 // Favicon
-gulp.task('favicon', function () {
+gulp.task('favicon', function(done) {
   // File where the favicon markups are stored
   var FAVICON_DATA_FILE = './assets/faviconData.json';
 
   return realFavicon.generateFavicon({
-		masterPicture: './assets/favicon.png',
-		dest: './public/favicons/',
+    masterPicture: './assets/favicon.svg',
+    dest: './public/favicons/',
     iconsPath: 'public/favicons/',
-		design: {
-			ios: {
-				pictureAspect: 'noChange',
-				assets: {
-					ios6AndPriorIcons: false,
-					ios7AndLaterIcons: false,
-					precomposedIcons: false,
-					declareOnlyDefaultIcon: true
-				}
-			},
-			desktopBrowser: {},
-			windows: {
-				pictureAspect: 'noChange',
-				backgroundColor: '#AF1F2D',
-				onConflict: 'override',
-				assets: {
-					windows80Ie10Tile: false,
-					windows10Ie11EdgeTiles: {
-						small: false,
-						medium: true,
-						big: false,
-						rectangle: false
-					}
-				}
-			},
-			androidChrome: {
-				pictureAspect: 'backgroundAndMargin',
-				margin: '17%',
-				backgroundColor: '#ffffff',
-				themeColor: '#AF1F2D',
-				manifest: {
-					name: 'Emerson Group',
-					display: 'standalone',
-					orientation: 'notSet',
-					onConflict: 'override',
-					declared: true
-				},
-				assets: {
-					legacyIcon: false,
-					lowResolutionIcons: false
-				}
-			},
-			safariPinnedTab: {
-				pictureAspect: 'blackAndWhite',
-				threshold: 42.96875,
-				themeColor: '#AF1F2D'
-			}
-		},
-		settings: {
-			scalingAlgorithm: 'Mitchell',
-			errorOnImageTooSmall: false,
-			readmeFile: false,
-			htmlCodeFile: false,
-			usePathAsIs: false
-		},
-		markupFile: FAVICON_DATA_FILE
-	}, function() {
-	});
+    design: {
+      ios: {
+        pictureAspect: 'backgroundAndMargin',
+        backgroundColor: '#b3995e',
+        margin: '14%',
+        assets: {
+          ios6AndPriorIcons: false,
+          ios7AndLaterIcons: false,
+          precomposedIcons: false,
+          declareOnlyDefaultIcon: true
+        }
+      },
+      desktopBrowser: {},
+      windows: {
+        pictureAspect: 'whiteSilhouette',
+        backgroundColor: '#091942',
+        onConflict: 'override',
+        assets: {
+          windows80Ie10Tile: false,
+          windows10Ie11EdgeTiles: {
+            small: false,
+            medium: true,
+            big: false,
+            rectangle: false
+          }
+        }
+      },
+      androidChrome: {
+        pictureAspect: 'backgroundAndMargin',
+        margin: '17%',
+        backgroundColor: '#b3995e',
+        themeColor: '#b3995e',
+        manifest: {
+          display: 'standalone',
+          orientation: 'notSet',
+          onConflict: 'override',
+          declared: true
+        },
+        assets: {
+          legacyIcon: false,
+          lowResolutionIcons: false
+        }
+      },
+      safariPinnedTab: {
+        pictureAspect: 'silhouette',
+        themeColor: '#091942'
+      }
+    },
+    settings: {
+      scalingAlgorithm: 'Mitchell',
+      errorOnImageTooSmall: false,
+      readmeFile: false,
+      htmlCodeFile: false,
+      usePathAsIs: false
+    },
+    markupFile: FAVICON_DATA_FILE
+  }, function() {
+    done();
+  });
 });
 
 
-gulp.task('default', sequence(
-  ['favicon', 'fonts', 'images', 'sprites', 'styles', 'scripts'],
-  ['modernizr']
-));
+gulp.task('default', gulp.series([
+  gulp.parallel(['images', 'sprites', 'styles', 'scripts' ]),
+  gulp.parallel([ 'modernizr' ])
+]));
 
-gulp.task('watch', ['default'], function() {
-  gulp.watch('assets/less/**/*.less', { cwd: './' }, ['styles']);
-  gulp.watch('assets/js/**/*.js', { cwd: './' }, ['scripts']);
-  gulp.watch('assets/icons/*.svg', { cwd: './' }, ['sprites']);
-  gulp.watch('assets/images/*', { cwd: './' }, ['images']);
-  gulp.watch('assets/fonts/*', { cwd: './' }, ['fonts']);
+gulp.task('watch', function() {
+  livereload.listen();
+  gulp.watch('**/*.php', { cwd: './' }).on(['change'], livereload.changed);
+  gulp.watch('assets/less/**/*.less', { cwd: './' }, gulp.series('styles'));
+  gulp.watch('assets/js/**/*.js', { cwd: './' }, gulp.series('scripts'));
+  gulp.watch('assets/icons/*.svg', { cwd: './' }, gulp.series('sprites'));
+  gulp.watch('assets/images/*', { cwd: './' }, gulp.series('images'));
 });

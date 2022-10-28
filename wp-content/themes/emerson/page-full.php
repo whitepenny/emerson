@@ -11,6 +11,7 @@ if ( have_posts() ) :
 
     $content = eg_get_the_content();
 ?>
+
 <?php get_template_part( 'layouts/page_header' ); ?>
 <?php if ( ! empty( $content ) ) : ?>
 <div class="fs-row fs-all-justify-center page_main">

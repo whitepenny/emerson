@@ -3,6 +3,8 @@
  * WPSEO plugin file.
  *
  * @package WPSEO\Admin
+ *
+ * @uses object $user
  */
 
 /* translators: %1$s expands to Yoast SEO */
@@ -58,4 +60,6 @@ $wpseo_no_index_author_label = sprintf(
 			<?php esc_html_e( 'Removes the readability analysis section from the metabox and disables all readability-related suggestions.', 'wordpress-seo' ); ?>
 		</p>
 	<?php endif; ?>
+
+	<?php do_action( 'wpseo_render_user_profile', $user ); ?>
 </div>

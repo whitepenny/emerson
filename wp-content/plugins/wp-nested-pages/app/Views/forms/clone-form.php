@@ -4,7 +4,7 @@
 */
 ?>
 <div class="nestedpages-modal-backdrop" data-nestedpages-modal="np-clone-modal"></div>
-<div class="nestedpages-modal-content <?php if ( $this->integrations->plugins->dark_mode->installed ) echo 'np-dark-mode'; ?>" id="np-clone-modal" data-nestedpages-modal="np-clone-modal">
+<div class="nestedpages-modal-content small short <?php if ( $this->integrations->plugins->dark_mode->installed ) echo 'np-dark-mode'; ?>" id="np-clone-modal" data-nestedpages-modal="np-clone-modal">
 
 	<div class="modal-content clone-modal np-modal-form <?php if ( $this->integrations->plugins->dark_mode->installed ) echo 'np-dark-mode'; ?>">
 		<h3><?php _e('Clone', 'wp-nested-pages'); ?> <span data-clone-parent></span></h3>
@@ -39,7 +39,7 @@
 			if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) ) :
 				$users_opt = [
 					'hide_if_only_one_author' => false,
-					'who' => 'authors',
+					'capability' => 'edit_posts',
 					'name' => 'post_author',
 					'id' => 'post_author',
 					'class'=> 'authors',
